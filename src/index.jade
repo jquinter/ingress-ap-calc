@@ -1,0 +1,170 @@
+doctype html
+html(ng-app="app", ng-controller="AppController as view")
+    head
+      title Ingress Player Calc
+      meta(content='text/html; charset=utf-8', http-equiv='Content-Type')
+      link(href='http://fonts.googleapis.com/css?family=Coda', rel='stylesheet', type='text/css')
+      link(href='app.css', rel='stylesheet', type='text/css')
+
+    body
+        script(type='text/javascript', src='angular/angular.js')
+        script(type='text/javascript', src='app.js')
+        label(for='currAP') Current AP
+        input#currAP(type='number', name='currAP', value='0', ng-model='currAP')
+        h3
+          | Next Level: 
+          span#nextLevel(ng-bind='nextLevel')
+        h3
+          | AP To Level: 
+          span#apNextLevel(ng-bind='apNextLevel')
+        ul.countContainer
+          li(ng-class="{'active': tab.toLevel}" ng-init="tab.toLevel = false" ng-click="activateTab('toLevel')")
+            | To Level
+            .list(ng-show="tab.toLevel" ng-hide="!tab.toLevel")
+              p
+                | Enemy Portals to Hack: 
+                span#enemyPortalHack(ng-bind='enemyPortalHack')
+              .break
+              p
+                | Fields to Make: 
+                span#fieldMake(ng-bind='fieldMake')
+              p
+                | Fields to Destroy: 
+                span#fieldDestroy(ng-bind='fieldDestroy')
+              .break
+              p
+                | Links to Make:
+                span#linkMake(ng-bind='linkMake')
+              p
+                | Links to Destroy:
+                span#linkDestroy(ng-bind='linkDestroy')
+              .break
+              p
+                | Resonators to Deploy:
+                span#resoMake(ng-bind='resoMake')
+              p
+                | Resonators to Destroy:
+                span#resoDestroy(ng-bind='resoDestroy')
+              .break
+              p
+                | Neutral Portals to Capture:
+                span#neutralPortal(ng-bind='neutralPortal')
+              .break
+              p
+                | Mods to Deploy:
+                span#modDeploy(ng-bind='modDeploy')
+              .break
+          li(ng-class="{'active': tab.APSit}" ng-init="tab.APSit = false" ng-click="activateTab('APSit')")
+            | AP Situations
+            .list(ng-show="tab.APSit" ng-hide="!tab.APSit")
+              h1 Perfect Match
+              p
+                | perfectMatchLinkCreate: 
+                span#perfectMatchLinkCreate(ng-bind='perfectMatchLinkCreate')
+                |  (
+                span#perfectMatchLinkCreateAP(ng-bind='perfectMatchLinkCreateAP')
+                | )
+              p
+                | perfectMatchPortalFull: 
+                span#perfectMatchPortalFull(ng-bind='perfectMatchPortalFull')
+                |  (
+                span#perfectMatchPortalFullAP(ng-bind='perfectMatchPortalFullAP')
+                | )
+              p
+                | perfectMatchRemainingAP: 
+                span#perfectMatchRemainingAP(ng-bind='perfectMatchRemainingAP')
+              .break
+              p
+                | Full Resonator Deploy from Neutral:
+                span#portalFull(ng-bind='portalFull')
+                |  (
+                span#portalFullRemaining(ng-bind='portalFullRemaining')
+                | )
+              .break
+              p
+                | Full Resonator Deploy from Full Enemy:
+                span#portalFullEnemy(ng-bind='portalFullEnemy')
+              .break
+              p
+                | Full Enemy Destroy:
+                span#portalFullDestroy(ng-bind='portalFullDestroy')
+              .break
+              p
+                | Full Destroy with 
+                input#portalLinks(type='number', name='portalLinks', value='0', ng-model='portalLinks')
+                |  Links:
+                span#fullDestroyLinks(ng-bind='fullDestroyLinks')
+              .break
+              p
+                | Full Destroy with 
+                input#portalFields(type='number', name='portalFields', value='0', ng-model='portalFields')
+                |  Fields:
+                span#fullDestroyFields(ng-bind='fullDestroyFields')
+              .break
+          li(ng-class="{'active': tab.SitCalc}" ng-init="tab.SitCalc = false" ng-click="activateTab('SitCalc')")
+            | SitCalc
+            .list(ng-show="tab.SitCalc" ng-hide="!tab.SitCalc")
+              p
+                input#doHackEnemy(type='checkbox', name='doHackEnemy', ng-model='doHackEnemy')
+                | Hack 
+                input#doHackEnemyCount(type='number', name='doHackEnemyCount', value='0', ng-model='doHackEnemyCount')
+                |  Enemy Portals
+              p
+                input#doDestroyReso(type='checkbox', name='doDestroyReso', ng-model='doDestroyReso')
+                |  Destroy 
+                input#doDestroyResoCount(type='number', name='doDestroyResoCount', value='0', ng-model='doDestroyResoCount')
+                |  Resonators
+              p
+                input#doDestroyLink(type='checkbox', name='doDestroyLink', ng-model='doDestroyLink')
+                |  Destroy 
+                input#doDestroyLinkCount(type='number', name='doDestroyLinkCount', value='0', ng-model='doDestroyLinkCount')
+                |  Non-Field Links
+              p
+                input#doDestroyField(type='checkbox', name='doDestroyField', ng-model='doDestroyField')
+                |  Destroy 
+                input#doDestroyFieldCount(type='number', name='doDestroyFieldCount', value='0', ng-model='doDestroyFieldCount')
+                |  Fields 
+                span.subtext (2 links)
+              p
+                input#doCapNeutral(type='checkbox', name='doCapNeutral', ng-model='doCapNeutral')
+                |  Capture 
+                input#doCapNeutralCount(type='number', name='doCapNeutralCount', value='0', ng-model='doCapNeutralCount')
+                |  Neutral Portals
+              p
+                input#doDeployReso(type='checkbox', name='doDeployReso', ng-model='doDeployReso')
+                |  Deploy 
+                input#doDeployResoCount(type='number', name='doDeployResoCount', value='0', ng-model='doDeployResoCount')
+                |  Resonators
+              p
+                input#doModDeploy(type='checkbox', name='doModDeploy', ng-model='doModDeploy')
+                |  Deploy 
+                input#doModDeployCount(type='number', name='doModDeployCount', value='0', ng-model='doModDeployCount')
+                |  Mods
+              p
+                input#doCreateLink(type='checkbox', name='doCreateLink', ng-model='doCreateLink')
+                |  Create 
+                input#doCreateLinkCount(type='number', name='doCreateLinkCount', value='0', ng-model='doCreateLinkCount')
+                |  Non-Field Links
+              p
+                input#doCreateField(type='checkbox', name='doCreateField', ng-model='doCreateField')
+                |  Create 
+                input#doCreateFieldCount(type='number', name='doCreateFieldCount', value='0', ng-model='doCreateFieldCount')
+                |  Fields 
+                span.subtext (2 links)
+              p
+                input#doRecharge(type='checkbox', name='doRecharge', ng-model='doRecharge')
+                |  Recharge 
+                input#doRechargeCount(type='number', name='doRechargeCount', value='0', ng-model='doRechargeCount')
+                |  Resonators
+              p
+                input#doUpgradeReso(type='checkbox', name='doUpgradeReso', ng-model='doUpgradeReso')
+                |  Upgrade 
+                input#doUpgradeResoCount(type='number', name='doUpgradeResoCount', value='0', ng-model='doUpgradeResoCount')
+                |  Resonators
+              .break
+              p
+                | Total Worth: 
+                span#calcWorth(ng-bind='calcWorth')
+              p
+                | To Next Level: 
+                span#calcToLevel(ng-bind='calcToLevel')

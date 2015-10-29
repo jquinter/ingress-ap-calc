@@ -1,0 +1,29 @@
+{
+  "name": "ingress-ap-calc",
+  "version": "1.0.0",
+  "description": "ingress-ap-calc ===============",
+  "main": "Gruntfile.js",
+  "dependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-copy": "^0.8.2",
+    "grunt-contrib-jade": "^0.15.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "load-grunt-tasks": "^3.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jquinter/ingress-ap-calc.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jquinter/ingress-ap-calc/issues"
+  },
+  "homepage": "https://github.com/jquinter/ingress-ap-calc"
+}

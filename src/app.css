@@ -1,0 +1,123 @@
+* {
+      font-family: "Coda", "Consolas", monospace;
+}
+
+body {
+      background-color: #000;
+      color: #FFF;
+}
+
+input,textarea,label {
+      display: block;
+}
+
+input[type=number] {
+      border: 5px solid #00B0E2;
+      border-radius: 10px;
+      padding: 5px;
+      background-color: #000;
+      color: #FFF;
+}
+
+p {
+      margin: 0;
+}
+
+p > span {
+      margin-left: 3px;
+}
+
+ul.countContainer {
+      padding: 0;
+      margin: 0;
+      list-style-type: none;
+}
+
+ul.countContainer li {
+      margin: 0;
+      float: left;
+      clear: both;
+
+      border: 5px solid #00B0E2;
+      border-radius: 10px;
+      padding: 5px;
+      cursor: pointer;
+
+      width: 150px;
+      height: 20px;
+}
+
+ul.countContainer li.active, ul.countContainer li.active:active {
+      background-color: #0CF;
+      color: #000;
+}
+
+ul.countContainer li:hover {
+      background-color: #0CF;
+      color: #000;
+}
+
+ul.countContainer li:active {
+      background-color: #09F;
+}
+
+ul.countContainer li .list {
+      position: absolute;
+      top: 185px;
+      left: 200px;
+      border: 10px solid #00B0E2;
+      border-radius: 20px;
+      background-color: #0CF;
+      padding: 10px;
+      color: #000;
+      cursor: default;
+}
+
+ul.countContainer li .list input {
+      width: 20px;
+      display: inline;
+}
+
+ul.countContainer li .list input[type=number] {
+      width: 50px;
+      border: 3px solid #00B0E2;
+      border-radius: 10px;
+      padding: 2px;
+}
+
+.subtext {
+      font-size: small;
+}
+
+.break {
+      margin-bottom: 20px;
+}
+
+.clear {
+      clear: both;
+}
+
+.animate-show.ng-hide-add, 
+.animate-show.ng-hide-remove {
+  -webkit-transition:all linear 0.5s;
+  -moz-transition:all linear 0.5s;
+  -o-transition:all linear 0.5s;
+  transition:all linear 0.5s;
+  display:block!important;
+}
+
+.animate-show.ng-hide-add.ng-hide-add-active,
+.animate-show.ng-hide-remove {
+  line-height:0;
+  opacity:0;
+  padding:0 10px;
+}
+
+.animate-show.ng-hide-add,
+.animate-show.ng-hide-remove.ng-hide-remove-active {
+  line-height:20px;
+  opacity:1;
+  padding:10px;
+  border:1px solid black;
+  background:white;
+}
