@@ -18,20 +18,20 @@ $(document).ready(function() {
 		ENEMY_PORTAL_HACK : 100,
 		FIELD_CREATE : 1250,
 		FIELD_DESTROY : 750,
+		FULL_RESO_BONUS : 250,
 		LINK_CREATE : 313,
 		LINK_DESTROY : 187,
+		NEUTRAL_PORTAL : 500,
 		RESO_MAKE : 125,
 		RESO_DESTROY : 75,
 		RESO_UPGRADE : 65,
 		RESO_RECHARGE : 10,
-		NEUTRAL_PORTAL : 500,
-		SHIELD_MAKE : 150,
-		FULL_RESO_BONUS : 250
+		MOD_DEPLOY : 125
 	};
 
 	$('#currAP,#portalLinks,#portalFields').live('keyup change', doCalc);
-	$('#doHackEnemyCount,#doDestroyResoCount,#doDestroyLinkCount,#doDestroyFieldCount,#doCapNeutralCount,#doDeployResoCount,#doDeployShieldCount,#doCreateLinkCount,#doCreateFieldCount,#doRechargeCount,#doUpgradeResoCount').live('keyup change', doCalc);
-	$('#doHackEnemy,#doDestroyReso,#doDestroyLink,#doDestroyField,#doCapNeutral,#doDeployReso,#doDeployShield,#doCreateLink,#doCreateField,#doRecharge,#doUpgradeReso').change(doCalc);
+	$('#doHackEnemyCount,#doDestroyResoCount,#doDestroyLinkCount,#doDestroyFieldCount,#doCapNeutralCount,#doDeployResoCount,#doModDeployCount,#doCreateLinkCount,#doCreateFieldCount,#doRechargeCount,#doUpgradeResoCount').live('keyup change', doCalc);
+	$('#doHackEnemy,#doDestroyReso,#doDestroyLink,#doDestroyField,#doCapNeutral,#doDeployReso,#doModDeploy,#doCreateLink,#doCreateField,#doRecharge,#doUpgradeReso').change(doCalc);
 	$('ul.countContainer li').click(changeTab);
 	$('ul.countContainer li[data-active=true]').click();
 
@@ -75,6 +75,18 @@ $(document).ready(function() {
 			apNextLevel = apLevels[nextLevel - 1] - currAP;
 		}
 
+		// determine how many links required 
+		// to round AP last digit to zero
+		// by just creating links
+		for (var perfectMatchLinkCreate = 0; perfectMatchLinkCreate < 10; ++perfectMatchLinkCreate ){
+			var acum = Actions.LINK_CREATE * perfectMatchLinkCreate;
+			console.log(perfectMatchLinkCreate, acum);
+			console.log(apNextLevel - acum, (apNextLevel - acum) % 10);
+			if( (apNextLevel - acum) % 10 == 0 ){
+				break;				
+			}
+		}
+
 		$('#nextLevel').text(nextLevel);
 		$('#apNextLevel').text(apNextLevel);
 
@@ -92,13 +104,25 @@ $(document).ready(function() {
 
 		$('#neutralPortal').text(Math.round(apNextLevel / Actions.NEUTRAL_PORTAL));
 
-		$('#shieldMake').text(Math.round(apNextLevel / Actions.SHIELD_MAKE));
+		$('#modDeploy').text(Math.round(apNextLevel / Actions.MOD_DEPLOY));
 
 
 		// situations
-		$('#portalFull').text(Math.round(apNextLevel / (
+		perfectMatchRemainingAP = apNextLevel;
+		$('#perfectMatchLinkCreate').text(perfectMatchLinkCreate);
+		$('#perfectMatchLinkCreateAP').text(perfectMatchLinkCreate * Actions.LINK_CREATE);
+		perfectMatchRemainingAP = perfectMatchRemainingAP - perfectMatchLinkCreate * Actions.LINK_CREATE;
+		apOnePortalFull = (Actions.RESO_MAKE * Defs.PORTAL_MAX) + Actions.FULL_RESO_BONUS;
+		perfectMatchPortalFull = Math.floor(perfectMatchRemainingAP / apOnePortalFull);
+		perfectMatchRemainingAP = perfectMatchRemainingAP - perfectMatchPortalFull * apOnePortalFull;
+		$('#perfectMatchPortalFull').text(perfectMatchPortalFull);
+		$('#perfectMatchPortalFullAP').text(perfectMatchPortalFull*apOnePortalFull);
+		$('#perfectMatchRemainingAP').text(perfectMatchRemainingAP);
+
+		$('#portalFull').text(Math.floor(apNextLevel / (
 			(Actions.RESO_MAKE * Defs.PORTAL_MAX) + Actions.FULL_RESO_BONUS
 		)));
+		$('#portalFullRemaining').text( apNextLevel - $('#portalFull').text()*((Actions.RESO_MAKE * Defs.PORTAL_MAX) + Actions.FULL_RESO_BONUS) );
 
 		$('#portalFullEnemy').text(Math.round(apNextLevel / (
 			(Actions.RESO_DESTROY * Defs.PORTAL_MAX) +
@@ -152,9 +176,9 @@ $(document).ready(function() {
 			calcWorth += (valTemp * Actions.RESO_MAKE);
 			calcWorth += (valTemp >= 8 ? Actions.FULL_RESO_BONUS : 0);
 		}
-		if ($('#doDeployShield:checked').length > 0) {
-			valTemp = (isNaN($('#doDeployShieldCount').val()) ? 0 : $('#doDeployShieldCount').val());
-			calcWorth += (valTemp * Actions.SHIELD_MAKE);
+		if ($('#doModDeploy:checked').length > 0) {
+			valTemp = (isNaN($('#doModDeployCount').val()) ? 0 : $('#doModDeployCount').val());
+			calcWorth += (valTemp * Actions.MOD_DEPLOY);
 		}
 		if ($('#doCreateLink:checked').length > 0) {
 			valTemp = (isNaN($('#doCreateLinkCount').val()) ? 0 : $('#doCreateLinkCount').val());
@@ -174,7 +198,8 @@ $(document).ready(function() {
 			calcWorth += (valTemp * Actions.RESO_UPGRADE);
 		}
 
-		calcToLevel = (calcWorth > 0 ? Math.round(apNextLevel / calcWorth) : 0);
+		// calcToLevel = (calcWorth > 0 ? Math.round(apNextLevel / calcWorth) : 0);
+		calcToLevel = (calcWorth > 0 ? (apNextLevel - calcWorth) : 0);
 
 		$('#calcWorth').text(calcWorth);
 		$('#calcToLevel').text(calcToLevel);
@@ -313,14 +338,20 @@ ul.countContainer li .list input[type=number] {
 					<p>Neutral Portals to Capture:<span id="neutralPortal"></span></p>
 					<div class="break"></div>
 
-					<p>Shields to Deploy:<span id="shieldMake"></span></p>
+					<p>Mods to Deploy:<span id="modDeploy"></span></p>
 					<div class="break"></div>
 				</div>
 			</li>
 
 			<li>AP Situations
 				<div class="list">
-					<p>Full Resonator Deploy from Neutral:<span id="portalFull"></span></p>
+					<h1>Perfect Match</h1>
+						<p>perfectMatchLinkCreate: <span id="perfectMatchLinkCreate"></span> (<span id="perfectMatchLinkCreateAP"></span>)</p>
+						<p>perfectMatchPortalFull: <span id="perfectMatchPortalFull"></span> (<span id="perfectMatchPortalFullAP"></span>)</p>
+						<p>perfectMatchRemainingAP: <span id="perfectMatchRemainingAP"></span></p>
+					<div class="break"></div>
+
+					<p>Full Resonator Deploy from Neutral:<span id="portalFull"></span> (<span id="portalFullRemaining"></span>)</p>
 					<div class="break"></div>
 
 					<p>Full Resonator Deploy from Full Enemy:<span id="portalFullEnemy"></span></p>
@@ -345,7 +376,7 @@ ul.countContainer li .list input[type=number] {
 					<p><input type="checkbox" id="doDestroyField" name="doDestroyField" /> Destroy <input type="number" id="doDestroyFieldCount" name="doDestroyFieldCount" value="0" /> Fields <span class="subtext">(2 links)</span></p>
 					<p><input type="checkbox" id="doCapNeutral" name="doCapNeutral" /> Capture <input type="number" id="doCapNeutralCount" name="doCapNeutralCount" value="0" /> Neutral Portals</p>
 					<p><input type="checkbox" id="doDeployReso" name="doDeployReso" /> Deploy <input type="number" id="doDeployResoCount" name="doDeployResoCount" value="0" /> Resonators</p>
-					<p><input type="checkbox" id="doDeployShield" name="doDeployShield" /> Deploy <input type="number" id="doDeployShieldCount" name="doDeployShieldCount" value="0" /> Shields</p>
+					<p><input type="checkbox" id="doModDeploy" name="doModDeploy" /> Deploy <input type="number" id="doModDeployCount" name="doModDeployCount" value="0" /> Mods</p>
 					<p><input type="checkbox" id="doCreateLink" name="doCreateLink" /> Create <input type="number" id="doCreateLinkCount" name="doCreateLinkCount" value="0" /> Non-Field Links</p>
 					<p><input type="checkbox" id="doCreateField" name="doCreateField" /> Create <input type="number" id="doCreateFieldCount" name="doCreateFieldCount" value="0" /> Fields <span class="subtext">(2 links)</span></p>
 					<p><input type="checkbox" id="doRecharge" name="doRecharge" /> Recharge <input type="number" id="doRechargeCount" name="doRechargeCount" value="0" /> Resonators</p>
